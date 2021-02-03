@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example.rest</groupId>
+    <groupId>service</groupId>
     <artifactId>jersey-service</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -48,8 +48,8 @@
                 <version>2.5.1</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -64,7 +64,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.example.rest.Main</mainClass>
+                    <mainClass>client.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
