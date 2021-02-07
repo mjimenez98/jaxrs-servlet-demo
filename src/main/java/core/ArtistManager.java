@@ -1,7 +1,8 @@
 package core;
 
+import business.Artist;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public interface ArtistManager {
 

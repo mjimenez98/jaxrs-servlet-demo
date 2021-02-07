@@ -1,9 +1,6 @@
 package business;
 
-import core.Album;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AlbumManagerImpl implements core.AlbumManager{

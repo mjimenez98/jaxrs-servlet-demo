@@ -1,10 +1,6 @@
 package business;
 
-import core.Album;
-import core.Artist;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class ArtistManagerImpl implements core.ArtistManager {
