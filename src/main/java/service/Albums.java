@@ -7,6 +7,8 @@ import core.ArtistManagerSingleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 /**
  * Root resource (exposed at "albums" path)
@@ -27,9 +29,8 @@ public class Albums {
     }
 
     @GET
-    @Path("{isrc}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getAlbum(@PathParam("isrc") String isrc) {
+    public String listAlbums() {
         try {
             if (!isManagerCreated)
                 initialize();
@@ -38,7 +39,10 @@ public class Albums {
             System.out.println(e.getMessage());
         }
 
-        return manager.getAlbum(isrc);
+        return manager.getAlbums().stream()
+                .sorted(Comparator.comparing(Album::getISRC_code))
+                .map(album -> album.getISRC_code() + " - " + album.getTitle())
+                .collect(Collectors.joining("\n"));
     }
 
     @POST
@@ -57,5 +61,55 @@ public class Albums {
         manager.createAlbum(newAlbum);
 
         return "Album created";
+    }
+
+    @PUT
+    @Consumes("application/json")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String updateAlbum(Album album) {
+        try {
+            if (!isManagerCreated)
+                initialize();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        Album newAlbum = new Album(album);
+        manager.updateAlbum(newAlbum);
+
+        return "Album updated";
+    }
+
+    @GET
+    @Path("{isrc}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getAlbum(@PathParam("isrc") String isrc) {
+        try {
+            if (!isManagerCreated)
+                initialize();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return manager.getAlbum(isrc);
+    }
+
+    @DELETE
+    @Path("{isrc}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String deleteAlbum(@PathParam("isrc") String isrc) {
+        try {
+            if (!isManagerCreated)
+                initialize();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        manager.deleteAlbum(isrc);
+
+        return "Album deleted";
     }
 }
