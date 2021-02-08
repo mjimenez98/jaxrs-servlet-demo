@@ -1,14 +1,25 @@
-package business;
+package core;
 
-public class Album{
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name="album")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Album {
+    @XmlElement
     private String ISRC_code; //unique
+    @XmlElement
     private String title;
+    @XmlElement
     private String content_description; //optional
+    @XmlElement
     private int release_year;
+    @XmlElement
     private String artist_nickname; //It may be possible that an artist record of an album is not stored in the artists repository.
 
-    public Album(){}
+    public Album() {}
 
     public Album(String ISRC_code, String title, String content_description, int release_year, String artist_nickname) {
         this.ISRC_code = ISRC_code;
@@ -16,6 +27,14 @@ public class Album{
         this.content_description = content_description;
         this.release_year = release_year;
         this.artist_nickname = artist_nickname;
+    }
+
+    public Album(Album album) {
+        this.ISRC_code = album.ISRC_code;
+        this.title = album.title;
+        this.content_description = album.content_description;
+        this.release_year = album.release_year;
+        this.artist_nickname = album.artist_nickname;
     }
 
     public String getISRC_code() {
@@ -60,7 +79,7 @@ public class Album{
 
     public String toString(){
         return String.format("Album International Standard Recording Code (ISRC) code: %s \n" +
-                        "Title: %s\n Content Description: %s\n, Release Year: %s\n, Artist: %s\n", this.getISRC_code(),
+                        "Title: %s\nContent Description: %s\nRelease Year: %s\nArtist: %s\n", this.getISRC_code(),
                 this.getTitle(), this.getContent_description(), this.getRelease_year(), this.getArtist_nickname());
     }
 }

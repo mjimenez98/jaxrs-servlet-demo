@@ -1,7 +1,5 @@
 package core;
 
-import business.Album;
-
 import java.util.ArrayList;
 
 public interface AlbumManager {

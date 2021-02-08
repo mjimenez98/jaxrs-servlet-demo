@@ -1,5 +1,7 @@
 package business;
 
+import core.Album;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -14,8 +16,10 @@ public class AlbumManagerImpl implements core.AlbumManager{
 
     @Override
     public String getAlbum(String isrc) {
-        Album album =albums.stream().filter(album1 -> album1.getISRC_code() == isrc).
-                findAny().orElse(null);
+        Album album =albums.stream()
+                .filter(album1 -> album1.getISRC_code().equals(isrc))
+                .findAny().orElse(null);
+
         return album == null ? "Album not found!": album.toString();
 
     }
@@ -34,6 +38,8 @@ public class AlbumManagerImpl implements core.AlbumManager{
 
     @Override
     public void deleteAlbum(String isrc) {
-        albums = albums.stream().filter(album -> album.getISRC_code() != isrc).collect(Collectors.toCollection(ArrayList::new));
+        albums = albums.stream()
+                .filter(album -> !album.getISRC_code().equals(isrc))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

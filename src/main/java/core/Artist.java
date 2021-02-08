@@ -1,4 +1,4 @@
-package business;
+package core;
 
 public class Artist{
 

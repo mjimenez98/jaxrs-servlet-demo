@@ -1,5 +1,7 @@
 package business;
 
+import core.Artist;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -14,8 +16,10 @@ public class ArtistManagerImpl implements core.ArtistManager {
 
     @Override
     public String getArtist(String nickname) {
-        Artist artist =artists.stream().filter(artist1 -> artist1.getNickname() == nickname).
-                findAny().orElse(null);
+        Artist artist = artists.stream()
+                .filter(artist1 -> artist1.getNickname().equals(nickname))
+                .findAny().orElse(null);
+
         return artist == null ? "Artist not found!": artist.toString();
     }
 
@@ -32,6 +36,8 @@ public class ArtistManagerImpl implements core.ArtistManager {
 
     @Override
     public void deleteArtist(String nickname) {
-        artists = artists.stream().filter(artist -> artist.getNickname() != nickname).collect(Collectors.toCollection(ArrayList::new));
+        artists = artists.stream()
+                .filter(artist -> !artist.getNickname().equals(nickname))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
