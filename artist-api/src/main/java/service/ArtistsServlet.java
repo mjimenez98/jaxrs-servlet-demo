@@ -29,18 +29,17 @@ public class ArtistsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String res;
-
         String path = req.getPathInfo();
-        int first = path.indexOf("/");
-        int second = path.indexOf("/", first) | path.length();
-        String nickname = path.substring(first + 1, second);
-
-        if (nickname.isEmpty()) {
+        
+        if (path == null) {
             res = manager.getArtists().stream()
                     .sorted(Comparator.comparing(Artist::getNickname))
                     .map(artist -> artist.getNickname() + " - " + artist.getFirst_name() + " " + artist.getLast_name())
                     .collect(Collectors.joining("\n"));
         } else {
+            int first = path.indexOf("/");
+            int second = path.indexOf("/", first) | path.length();
+            String nickname = path.substring(first + 1, second);
             res = manager.getArtist(nickname);
         }
 
