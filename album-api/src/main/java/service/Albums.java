@@ -28,6 +28,10 @@ public class Albums {
         manager = managerSingleton.getAlbumManagerImplementation();
     }
 
+    /**
+     * List all albums by ISRC and title
+     * @return Collection of ISRCs and titles
+     */
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String listAlbums() {

@@ -16,6 +16,13 @@ public class Artist{
         this.short_bio = short_bio;
     }
 
+    public Artist(Artist artist) {
+        this.nickname = artist.nickname;
+        this.first_name = artist.nickname;
+        this.last_name = artist.last_name;
+        this.short_bio = artist.short_bio;
+    }
+
     public String getNickname() {
         return nickname;
     }
