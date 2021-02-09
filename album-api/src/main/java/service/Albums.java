@@ -37,15 +37,16 @@ public class Albums {
         try {
             if (!isManagerCreated)
                 initialize();
+
+            return manager.getAlbums().stream()
+                    .sorted(Comparator.comparing(Album::getISRC_code))
+                    .map(album -> album.getISRC_code() + " - " + album.getTitle())
+                    .collect(Collectors.joining("\n"));
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return "Could not fetch albums";
         }
-
-        return manager.getAlbums().stream()
-                .sorted(Comparator.comparing(Album::getISRC_code))
-                .map(album -> album.getISRC_code() + " - " + album.getTitle())
-                .collect(Collectors.joining("\n"));
     }
 
     @POST
@@ -55,19 +56,26 @@ public class Albums {
         try {
             if (!isManagerCreated)
                 initialize();
+
+            if (album.getISRC_code() == null || album.getTitle() == null || album.getRelease_year() == 0 ||
+                    album.getArtist_nickname() == null)
+                return "Request could not be processed: Parameter missing";
+
+            String albumToString = manager.getAlbum(album.getISRC_code());
+
+            if (albumToString.equals("Album not found!")) {
+                Album newAlbum = new Album(album);
+                manager.createAlbum(newAlbum);
+
+                return "Album created";
+            } else {
+                return "Album already exists";
+            }
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return "Could not create album";
         }
-
-        if (album.getISRC_code() == null || album.getTitle() == null || album.getRelease_year() == 0 ||
-                album.getArtist_nickname() == null)
-            return "Request could not be processed: Parameter missing";
-
-        Album newAlbum = new Album(album);
-        manager.createAlbum(newAlbum);
-
-        return "Album created";
     }
 
     @PUT
@@ -77,15 +85,26 @@ public class Albums {
         try {
             if (!isManagerCreated)
                 initialize();
+
+            if (album.getISRC_code() == null || album.getTitle() == null || album.getRelease_year() == 0 ||
+                    album.getArtist_nickname() == null)
+                return "Request could not be processed: Parameter missing";
+
+            String albumToString = manager.getAlbum(album.getISRC_code());
+
+            if (albumToString.equals("Album not found!")) {
+                return albumToString;
+            } else {
+                Album newAlbum = new Album(album);
+                manager.updateAlbum(newAlbum);
+
+                return "Album updated";
+            }
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return "Album could not be created";
         }
-
-        Album newAlbum = new Album(album);
-        manager.updateAlbum(newAlbum);
-
-        return "Album updated";
     }
 
     @GET
@@ -95,12 +114,13 @@ public class Albums {
         try {
             if (!isManagerCreated)
                 initialize();
+
+            return manager.getAlbum(isrc);
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return "Could not fetch album";
         }
-
-        return manager.getAlbum(isrc);
     }
 
     @DELETE
@@ -110,13 +130,19 @@ public class Albums {
         try {
             if (!isManagerCreated)
                 initialize();
+
+            String albumToString = manager.getAlbum(isrc);
+
+            if (albumToString.equals("Album not found!")) {
+                return albumToString;
+            } else {
+                manager.deleteAlbum(isrc);
+                return "Album deleted";
+            }
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
+            return "Album could not be deleted";
         }
-
-        manager.deleteAlbum(isrc);
-
-        return "Album deleted";
     }
 }

@@ -68,18 +68,19 @@ public class ArtistsServlet extends HttpServlet {
             // Get artist
             ObjectMapper mapper = new ObjectMapper();
             Artist artist = mapper.readValue(req.getReader(), Artist.class);
+            String artistToString = manager.getArtist(artist.getNickname());
 
-            if (artist.getNickname() == null || artist.getFirst_name() == null || artist.getLast_name() == null)
-                out.append("Request could not be processed: Parameter missing");
-            else {
+            if (artistToString.equals("Artist not found!")) {
                 // Create artist
                 Artist newArtist = new Artist(artist);
                 manager.createArtist(newArtist);
 
                 // Send response
                 out.append("Artist created");
+            } else {
+                out.append("Artist already exists");
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             out.append("Artist could not be created");
         }
@@ -114,7 +115,7 @@ public class ArtistsServlet extends HttpServlet {
                 out.append("Artist updated");
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             out.append("Artist could not be updated");
         }
@@ -149,7 +150,7 @@ public class ArtistsServlet extends HttpServlet {
                     res = "Artist deleted";
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             res = "Artist could not be deleted";
         }
