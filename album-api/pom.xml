@@ -7,7 +7,7 @@
     <artifactId>album-api</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>jaxrs-rest-demo</name>
+    <name>album-api</name>
 
     <dependencyManagement>
         <dependencies>

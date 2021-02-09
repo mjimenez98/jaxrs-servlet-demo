@@ -28,19 +28,24 @@ public class ArtistsServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String res;
+        String res = null;
         String path = req.getPathInfo();
-        
-        if (path == null) {
-            res = manager.getArtists().stream()
-                    .sorted(Comparator.comparing(Artist::getNickname))
-                    .map(artist -> artist.getNickname() + " - " + artist.getFirst_name() + " " + artist.getLast_name())
-                    .collect(Collectors.joining("\n"));
-        } else {
-            int first = path.indexOf("/");
-            int second = path.indexOf("/", first) | path.length();
-            String nickname = path.substring(first + 1, second);
-            res = manager.getArtist(nickname);
+
+        try {
+            if (path == null) {
+                res = manager.getArtists().stream()
+                        .sorted(Comparator.comparing(Artist::getNickname))
+                        .map(artist -> artist.getNickname() + " - " + artist.getFirst_name() + " " + artist.getLast_name())
+                        .collect(Collectors.joining("\n"));
+            } else {
+                int first = path.indexOf("/");
+                int second = path.indexOf("/", first) | path.length();
+                String nickname = path.substring(first + 1, second);
+                res = manager.getArtist(nickname);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            res = "Artists could not be fetched";
         }
 
         resp.setContentType("text/html");
@@ -96,13 +101,19 @@ public class ArtistsServlet extends HttpServlet {
             // Get artist
             ObjectMapper mapper = new ObjectMapper();
             Artist artist = mapper.readValue(req.getReader(), Artist.class);
+            String artistToString = manager.getArtist(artist.getNickname());
 
-            // Create artist
-            Artist newArtist = new Artist(artist);
-            manager.updateArtist(newArtist);
+            if (artistToString.equals("Artist not found!")) {
+                out.append(artistToString);
+            } else {
+                // Create artist
+                Artist newArtist = new Artist(artist);
+                manager.updateArtist(newArtist);
 
-            // Send response
-            out.append("Artist updated");
+                // Send response
+                out.append("Artist updated");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             out.append("Artist could not be updated");
@@ -118,18 +129,29 @@ public class ArtistsServlet extends HttpServlet {
      */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String res;
+        String res = null;
 
-        String path = req.getPathInfo();
-        int first = path.indexOf("/");
-        int second = path.indexOf("/", first) | path.length();
-        String nickname = path.substring(first + 1, second);
+        try {
+            String path = req.getPathInfo();
+            int first = path.indexOf("/");
+            int second = path.indexOf("/", first) | path.length();
+            String nickname = path.substring(first + 1, second);
 
-        if (nickname.isEmpty()) {
-            res = "No artist has been specified to delete";
-        } else {
-            manager.deleteArtist(nickname);
-            res = "Artist deleted";
+            if (nickname.isEmpty()) {
+                res = "No artist has been specified to delete";
+            } else {
+                String artistToString = manager.getArtist(nickname);
+
+                if (artistToString.equals("Artist not found!")) {
+                    res = artistToString;
+                } else {
+                    manager.deleteArtist(nickname);
+                    res = "Artist deleted";
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            res = "Artist could not be deleted";
         }
 
         resp.setContentType("text/html");

@@ -18,7 +18,7 @@ public class Artist{
 
     public Artist(Artist artist) {
         this.nickname = artist.nickname;
-        this.first_name = artist.nickname;
+        this.first_name = artist.first_name;
         this.last_name = artist.last_name;
         this.short_bio = artist.short_bio;
     }
