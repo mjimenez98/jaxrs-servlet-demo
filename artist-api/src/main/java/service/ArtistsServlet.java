@@ -65,12 +65,16 @@ public class ArtistsServlet extends HttpServlet {
             ObjectMapper mapper = new ObjectMapper();
             Artist artist = mapper.readValue(req.getReader(), Artist.class);
 
-            // Create artist
-            Artist newArtist = new Artist(artist);
-            manager.createArtist(newArtist);
+            if (artist.getNickname() == null || artist.getFirst_name() == null || artist.getLast_name() == null)
+                out.append("Request could not be processed: Parameter missing");
+            else {
+                // Create artist
+                Artist newArtist = new Artist(artist);
+                manager.createArtist(newArtist);
 
-            // Send response
-            out.append("Artist created");
+                // Send response
+                out.append("Artist created");
+            }
         } catch (IOException e) {
             e.printStackTrace();
             out.append("Artist could not be created");

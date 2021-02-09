@@ -3,7 +3,6 @@ package service;
 import business.AlbumManagerImpl;
 import core.Album;
 import core.AlbumManagerSingleton;
-import core.ArtistManagerSingleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -60,6 +59,10 @@ public class Albums {
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+        if (album.getISRC_code() == null || album.getTitle() == null || album.getRelease_year() == 0 ||
+                album.getArtist_nickname() == null)
+            return "Request could not be processed: Parameter missing";
 
         Album newAlbum = new Album(album);
         manager.createAlbum(newAlbum);
