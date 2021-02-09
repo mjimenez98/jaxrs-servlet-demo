@@ -78,7 +78,7 @@ public class Album {
     }
 
     public String toString(){
-        return String.format("Album International Standard Recording Code (ISRC) code: %s \n" +
+        return String.format("Album International Standard Recording Code (ISRC) code: %s\n" +
                         "Title: %s\nContent Description: %s\nRelease Year: %s\nArtist: %s\n", this.getISRC_code(),
                 this.getTitle(), this.getContent_description(), this.getRelease_year(), this.getArtist_nickname());
     }

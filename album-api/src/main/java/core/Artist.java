@@ -7,7 +7,7 @@ public class Artist{
     private String last_name;
     private String short_bio; //optional
 
-    public Artist(){}
+    public Artist() {}
 
     public Artist(String nickname, String first_name, String last_name, String short_bio) {
         this.nickname = nickname;
@@ -56,7 +56,7 @@ public class Artist{
     }
 
     public String toString(){
-        return String.format("Artist Nickname: %s\n, First Name: %s\n, Last Name: %s\n, Short Bio: %\n",
+        return String.format("Artist Nickname: %s\n" + "First Name: %s\nLast Name: %s\nShort Bio: %s\n",
                 this.getNickname(), this.getFirst_name(), this.getLast_name(), this.getShort_bio());
     }
 }
