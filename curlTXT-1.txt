@@ -1,0 +1,47 @@
+Curl Commands:
+
+Artist Selections:
+
+[1] list artist
+
+> curl http://localhost:9090/artist_api_war_exploded/artists
+
+[2] get artist details
+
+> curl http://localhost:9090/artist_api_war_exploded/artists/124
+(124: being the artist id)
+
+[3] add artist
+
+> curl -d '{"nickname": "124", "first_name": "aFirstName", "last_name": "aLastName", "short_bio": "2021"}' -H "Content-Type: application/json" -X POST http://localhost:9090/artist_api_war_exploded/artists
+
+[4] update artist
+
+> curl -d '{"nickname": "124", "first_name": "aNewFirstName", "last_name": "aLastName", "short_bio": "2021"}' -H "Content-Type: application/json" -X PUT http://localhost:9090/artist_api_war_exploded/artists
+
+[5] delete artist
+
+> curl -X DELETE -H "Content-Type: application/json" http://localhost:9090/artist_api_war_exploded/artists/124
+
+Album Selections:
+
+[6] list albums
+
+> curl http://localhost:8080/myapp/albums
+
+[7] get album details
+
+> curl http://localhost:8080/myapp/albums/123
+(123: being the ISRC id)
+
+[8] add album
+
+> curl -d '{"ISRC_code": "123", "title": "aTitle", "content_description": "aDescription", "release_year": "2021","artist_nickname": "aNickname"}' -H "Content-Type: application/json" -X POST http://localhost:8080/myapp/albums
+
+[9] update album info
+
+curl -X PUT -H "Content-Type: application/json" -d '{"ISRC_code": "123", "title": "aNewTitle", "content_description": "aNewDescription", "release_year": "2022","artist_nickname": "aNewNickname"}' http://localhost:8080/myapp/albums/
+
+[10] delete album
+
+> curl -X DELETE -H "Content-Type: application/json" http://localhost:8080/myapp/albums/123
