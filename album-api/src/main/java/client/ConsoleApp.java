@@ -1,21 +1,14 @@
 package client;
-import core.Album;
-
-import service.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Scanner;
-
-import static org.glassfish.grizzly.http.server.Constants.POST;
 
 public class ConsoleApp {
     private static boolean loop = true;
-    public static void apiMenu() throws IOException {
+    public static void apiMenu() {
         while(loop){
             System.out.println();
             System.out.println("API USER MENU");
@@ -40,66 +33,16 @@ public class ConsoleApp {
                 case "1":
                     //GET ALL ARTISTS
                     System.out.println("List artists selected.");
-                    try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists");
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("GET");
-                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-                        int responseCode = con.getResponseCode();
-                        System.out.println("GET Response Code :: " + responseCode);
-                        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                            BufferedReader br = new BufferedReader(new InputStreamReader(
-                                    con.getInputStream()));
-                            String inputLine;
-                            StringBuffer response = new StringBuffer();
 
-                            while ((inputLine = br.readLine()) != null) {
-                                response.append(inputLine);
-                            }
-                            br.close();
-
-                            // print result
-                            System.out.println(response.toString());
-                        } else {
-                            System.out.println("GET request not worked");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    client.Artist.getArtists();
                     break;
                 case "2":
                     //GET ARTIST DETAILS
                     System.out.println("Get artist details selected.");
                     System.out.print("Enter the nickname of the artist to view details: ");
                     String getArtNick = usrInput.nextLine();
-                    try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+getArtNick);
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("GET");
-                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-                        int responseCode = con.getResponseCode();
-                        System.out.println("GET Response Code :: " + responseCode);
-                        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                            BufferedReader br = new BufferedReader(new InputStreamReader(
-                                    con.getInputStream()));
-                            String inputLine;
-                            StringBuffer response = new StringBuffer();
 
-                            while ((inputLine = br.readLine()) != null) {
-                                response.append(inputLine);
-                            }
-                            br.close();
-
-                            // print result
-                            System.out.println(response.toString());
-                        } else {
-                            System.out.println("GET request not worked");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    client.Artist.getArtist(getArtNick);
                     break;
                 case "3":
                     //POST ARTIST
@@ -113,56 +56,7 @@ public class ConsoleApp {
                     System.out.print("Enter the bio of the new artist: ");
                     String artBio = usrInput.nextLine();
 
-                    String POST_ART_PARAMS = null;
-                    try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists");
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("POST");
-                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-                        con.setRequestProperty("Accept-Language", "application/json");
-                        con.setRequestProperty("Content-Type", "application/json");
-
-                        POST_ART_PARAMS = "{\n" +
-                                "    \"nickname\": \"" + artNick + "\",\n" +
-                                "    \"first_name\": \"" + artFirst + "\",\n" +
-                                "    \"last_name\": \"" + artLast + "\",\n" +
-                                "    \"short_bio\": \"" + artBio + "\"\n" +
-                                "}";
-
-                        // For POST only - START
-                        con.setDoOutput(true);
-                        OutputStream os = con.getOutputStream();
-                        os.write(POST_ART_PARAMS.getBytes(StandardCharsets.UTF_8));
-                        os.flush();
-                        os.close();
-                        // For POST only - END
-
-                        int responseCode = con.getResponseCode();
-                        System.out.println("POST Response Code :: " + responseCode);
-
-                        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-                            BufferedReader br = new BufferedReader(new InputStreamReader(
-                                    con.getInputStream()));
-                            String inputLine;
-                            StringBuffer sbp = new StringBuffer();
-
-                            while ((inputLine = br.readLine()) != null) {
-                                sbp.append(inputLine);
-                            }
-                            br.close();
-
-                            // print result
-                            System.out.println(sbp.toString());
-                        } else {
-                            System.out.println("POST request not worked");
-                        }
-                    } catch (IOException protocolException) {
-                        protocolException.printStackTrace();
-                    }
-
-                    System.out.println("JSON output: ");
-                    System.out.println(POST_ART_PARAMS + "\n");
-
+                    client.Artist.addArtist(artNick, artFirst, artLast, artBio);
                     break;
                 case "4":
                     //PUT ARTIST
@@ -176,87 +70,14 @@ public class ConsoleApp {
                     System.out.print("Enter the bio of the new artist: ");
                     String artBiop = usrInput.nextLine();
 
-                    String PUT_ART_PARAMS = null;
-                    try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+artNickp);
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("PUT");
-                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-                        con.setRequestProperty("Accept-Language", "application/json");
-                        con.setRequestProperty("Content-Type", "application/json");
-
-                        PUT_ART_PARAMS = "{\n" +
-                                "    \"nickname\": \"" + artNickp + "\",\n" +
-                                "    \"first_name\": \"" + artFirstp + "\",\n" +
-                                "    \"last_name\": \"" + artLastp + "\",\n" +
-                                "    \"short_bio\": \"" + artBiop + "\"\n" +
-                                "}";
-
-                        // For POST only - START
-                        con.setDoOutput(true);
-                        OutputStream os = con.getOutputStream();
-                        os.write(PUT_ART_PARAMS.getBytes(StandardCharsets.UTF_8));
-                        os.flush();
-                        os.close();
-                        // For POST only - END
-
-                        int responseCode = con.getResponseCode();
-                        System.out.println("PUT Response Code :: " + responseCode);
-
-                        if (responseCode == HttpURLConnection.HTTP_OK) { //success
-                            BufferedReader br = new BufferedReader(new InputStreamReader(
-                                    con.getInputStream()));
-                            String inputLine;
-                            StringBuffer sbp = new StringBuffer();
-
-                            while ((inputLine = br.readLine()) != null) {
-                                sbp.append(inputLine);
-                            }
-                            br.close();
-
-                            // print result
-                            System.out.println(sbp.toString());
-                        } else {
-                            System.out.println("PUT request did not work.");
-                        }
-                    } catch (IOException protocolException) {
-                        protocolException.printStackTrace();
-                    }
-
-                    System.out.println("JSON output: ");
-                    System.out.println(PUT_ART_PARAMS + "\n");
+                    client.Artist.updateArtist(artNickp, artFirstp, artLastp, artBiop);
                     break;
                 case "5":
                     System.out.println("Delete artist selected.");
                     System.out.print("Enter the nickname of the artist to delete: ");
                     String delArtNick = usrInput.nextLine();
-                    try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+delArtNick);
-                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("DELETE");
-                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-                        int responseCode = con.getResponseCode();
-                        System.out.println("DELETE Response Code :: " + responseCode);
-                        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                            BufferedReader br = new BufferedReader(new InputStreamReader(
-                                    con.getInputStream()));
-                            String inputLine;
-                            StringBuffer response = new StringBuffer();
 
-                            while ((inputLine = br.readLine()) != null) {
-                                response.append(inputLine);
-                            }
-                            br.close();
-
-                            // print result
-                            System.out.println(response.toString());
-                        } else {
-                            System.out.println("DELETE request not worked");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    client.Artist.deleteArtist(delArtNick);
                     break;
                 case "6":
                     System.out.println("List albums selected.");

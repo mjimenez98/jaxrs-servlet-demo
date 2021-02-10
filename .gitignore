@@ -25,3 +25,4 @@ hs_err_pid*
 # IntelliJ
 .idea/
 *.iml
+artist-api/target/artist-api-1.0-SNAPSHOT/META-INF/MANIFEST.MF
