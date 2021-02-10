@@ -38,6 +38,7 @@ public class ConsoleApp {
             System.out.print("\n");
             switch (sel) {
                 case "1":
+                    //GET ALL ARTISTS
                     System.out.println("List artists selected.");
                     try {
                         URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists");
@@ -68,11 +69,12 @@ public class ConsoleApp {
                     }
                     break;
                 case "2":
+                    //GET ARTIST DETAILS
                     System.out.println("Get artist details selected.");
-                    System.out.print("Enter the ISRC of the new album: ");
-                    String getArtISRC = usrInput.nextLine();
+                    System.out.print("Enter the nickname of the artist to view details: ");
+                    String getArtNick = usrInput.nextLine();
                     try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists"+getArtISRC);
+                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+getArtNick);
                         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                         con.setRequestMethod("GET");
                         con.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -100,6 +102,7 @@ public class ConsoleApp {
                     }
                     break;
                 case "3":
+                    //POST ARTIST
                     System.out.println("Add artist selected.");
                     System.out.print("Enter the Nickname of the new artist: ");
                     String artNick = usrInput.nextLine();
@@ -123,7 +126,7 @@ public class ConsoleApp {
                                 "    \"nickname\": \"" + artNick + "\",\n" +
                                 "    \"first_name\": \"" + artFirst + "\",\n" +
                                 "    \"last_name\": \"" + artLast + "\",\n" +
-                                "    \"short_bio\": \"" + artBio + "\",\n" +
+                                "    \"short_bio\": \"" + artBio + "\"\n" +
                                 "}";
 
                         // For POST only - START
@@ -162,6 +165,7 @@ public class ConsoleApp {
 
                     break;
                 case "4":
+                    //PUT ARTIST
                     System.out.println("Update artist selected.");
                     System.out.print("Enter the Nickname of the new artist: ");
                     String artNickp = usrInput.nextLine();
@@ -174,9 +178,9 @@ public class ConsoleApp {
 
                     String PUT_ART_PARAMS = null;
                     try {
-                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists"+artNickp);
+                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+artNickp);
                         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                        con.setRequestMethod("POST");
+                        con.setRequestMethod("PUT");
                         con.setRequestProperty("User-Agent", "Mozilla/5.0");
                         con.setRequestProperty("Accept-Language", "application/json");
                         con.setRequestProperty("Content-Type", "application/json");
@@ -185,7 +189,7 @@ public class ConsoleApp {
                                 "    \"nickname\": \"" + artNickp + "\",\n" +
                                 "    \"first_name\": \"" + artFirstp + "\",\n" +
                                 "    \"last_name\": \"" + artLastp + "\",\n" +
-                                "    \"short_bio\": \"" + artBiop + "\",\n" +
+                                "    \"short_bio\": \"" + artBiop + "\"\n" +
                                 "}";
 
                         // For POST only - START
@@ -197,7 +201,7 @@ public class ConsoleApp {
                         // For POST only - END
 
                         int responseCode = con.getResponseCode();
-                        System.out.println("POST Response Code :: " + responseCode);
+                        System.out.println("PUT Response Code :: " + responseCode);
 
                         if (responseCode == HttpURLConnection.HTTP_OK) { //success
                             BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -213,7 +217,7 @@ public class ConsoleApp {
                             // print result
                             System.out.println(sbp.toString());
                         } else {
-                            System.out.println("POST request not worked");
+                            System.out.println("PUT request did not work.");
                         }
                     } catch (IOException protocolException) {
                         protocolException.printStackTrace();
@@ -224,6 +228,35 @@ public class ConsoleApp {
                     break;
                 case "5":
                     System.out.println("Delete artist selected.");
+                    System.out.print("Enter the nickname of the artist to delete: ");
+                    String delArtNick = usrInput.nextLine();
+                    try {
+                        URL obj = new URL("http://localhost:9090/artist_api_war_exploded/artists/"+delArtNick);
+                        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                        con.setRequestMethod("DELETE");
+                        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+                        int responseCode = con.getResponseCode();
+                        System.out.println("DELETE Response Code :: " + responseCode);
+                        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                            BufferedReader br = new BufferedReader(new InputStreamReader(
+                                    con.getInputStream()));
+                            String inputLine;
+                            StringBuffer response = new StringBuffer();
+
+                            while ((inputLine = br.readLine()) != null) {
+                                response.append(inputLine);
+                            }
+                            br.close();
+
+                            // print result
+                            System.out.println(response.toString());
+                        } else {
+                            System.out.println("DELETE request not worked");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case "6":
                     System.out.println("List albums selected.");
